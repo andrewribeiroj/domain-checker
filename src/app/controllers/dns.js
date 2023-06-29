@@ -23,9 +23,9 @@ router.get('/:domain?', async (req, res) => {
                 message: 'Domain is undefined'
             });
 
-        dig('ALL', domain, (response) => {
+        dig('A', domain, (response) => {
             return res.status(200).send({
-                response: response['Answer']
+                answer: response.Answer
             });
         })
     } catch (err) {

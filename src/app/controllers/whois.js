@@ -26,7 +26,7 @@ router.get('/:domain?', async (req, res) => {
                 message: 'Domain is undefined'
             });
         let resWhois = await whois(`${psl.get(domain)}`, { follow: 3, verbose: true });
-        if (resWhois.length > 1)
+        if (resWhois.length > 1) //Temporary solution before checking TLDs individually
             return res.status(200).send({
                 response: resWhois[1]
             });
