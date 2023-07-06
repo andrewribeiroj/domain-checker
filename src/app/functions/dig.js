@@ -1,32 +1,13 @@
-const https = require('https')
-const dnsServer = 'https://dns.google/'
+const axios = require('axios');
 
-function dig(type, domain, callback) {
-    
-    try {
+async function dig(type, domain, callback) {
+    try{
 
-        https.get(`${dnsServer}/resolve?name=${domain}&type=${type}&cd=true`, (ans) => {
-
-            if (ans.statusCode != 200){
-                callback(ans.statusCode)
-
-            } else {
-   
-                let data = '';
-                
-                ans.on('data', (chunk) => {
-                    data += chunk
-                })
-                
-                ans.on('end', () => {
-                    callback(JSON.parse(data))
-                })
-            }
-        })
-
+        const response = await axios.get(`https://dns.google/resolve?name=${domain}&type=${type}`)
+        
+        callback(response.data.Answer)
     } catch (err) {
-        console.log(err)
-        return ({ error: 'Something went wrong' })
+        console.log(err);
     }
 
 }

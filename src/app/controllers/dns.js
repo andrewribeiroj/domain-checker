@@ -1,6 +1,5 @@
 // Require Packages
 const express = require('express');
-const dns = require('dns');
 const dig = require('../functions/dig');
 const router = express.Router();
 
@@ -9,32 +8,47 @@ router.get('/favicon.ico', (req, res) => res.status(204));
 
 // Read
 router.get('/', async (req, res) => {
-    return res.status(200).send({
-        message: 'dns'
+    return res.status(404).send({
+        error: 'No domain specified'
     });
 });
 
-router.get('/:domain?', async (req, res) => {
-    try {
-        const { domain } = req.params
-        if (typeof domain === 'undefined')
-            return res.status(400).send({
-                error: '400',
-                message: 'Domain is undefined'
-            });
+router.get('/:domain?/:type?', async (req, res) => {
+        const { domain, type } = req.params
+        let Answer = {}
 
-        dig('A', domain, (response) => {
-            return res.status(200).send({
-                answer: response.Answer
-            });
-        })
-    } catch (err) {
-        console.log(err)
-        return res.status(500).send({
-            error: '500',
-            message: 'Something went wrong'
-        });
-    }
+        if (typeof type == 'undefined'){
+            //If a type isn't specified, default to generic record types: A,AAAA,MX,NS
+            const records = ["A", "AAAA", "MX", "NS"]
+
+            for (const record of records) {
+                Answer[record] = []
+            }
+
+            for (const record of records) {
+                await dig (record, domain, (response) => {
+                    for (const dns_record of response){
+                        Answer[record].push(dns_record.data)
+                    }
+
+                })
+            }
+
+        } else {
+            
+            Answer[type.toUpperCase()] = []
+            await dig (type, domain, (response) => {
+                for (const dns_record of response){
+                    Answer[type.toUpperCase()].push(dns_record.data)
+                }
+            })
+            
+        }
+
+    
+    return res.status(200).send({
+        Answer
+    })
 });
 
 // Export
