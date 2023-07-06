@@ -14,20 +14,41 @@ router.get('/', async (req, res) => {
     });
 });
 
-router.get('/:domain?', async (req, res) => {
+router.get('/:domain/:type?', async (req, res) => {
     try {
         const { domain } = req.params
+        const { type } = req.params
+        let types = [];
+        let answers = [];
+
         if (typeof domain === 'undefined')
             return res.status(400).send({
                 error: '400',
                 message: 'Domain is undefined'
             });
 
-        dig('A', domain, (response) => {
-            return res.status(200).send({
-                answer: response.Answer
-            });
-        })
+        if (typeof type === 'undefined') {
+            types = ['A', 'AAAA', 'NS', 'MX', 'TXT'];
+        }
+        else {
+            types = [type];
+        }
+
+        let digArray = async () => {
+            for (const type of types) {
+                dig(type, domain, (response) => {
+                    answers.push(response.Answer);
+                });
+                console.log(type)
+            }
+        }
+        await digArray();
+
+        console.log(answers);
+
+        return res.status(200).send({
+            answers
+        });
     } catch (err) {
         console.log(err)
         return res.status(500).send({
