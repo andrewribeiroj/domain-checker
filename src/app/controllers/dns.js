@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 router.get('/:domain?/:type?', async (req, res) => {
         const { domain, type } = req.params
         let Answer = {}
-
+        console.log("Requesting: " + domain + " : DNS")
         if (typeof type == 'undefined'){
             //If a type isn't specified, default to generic record types: A,AAAA,MX,NS
             const records = ["A", "AAAA", "MX", "NS"]

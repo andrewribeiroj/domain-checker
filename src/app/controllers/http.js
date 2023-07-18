@@ -24,7 +24,8 @@ router.get('/:domain?', async (req, res) => {
                 error: '400',
                 message: 'Domain is undefined'
             });
-        await axios.get('https://'+domain)
+        console.log("Requesting: " + domain + " : HTTP")
+        await axios.get('https://' + domain)
             .then((response) => {
                 return res.status(200).send({
                     response: response.status
