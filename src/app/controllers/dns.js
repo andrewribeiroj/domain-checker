@@ -8,8 +8,8 @@ router.get('/favicon.ico', (req, res) => res.status(204));
 
 // Read
 router.get('/', async (req, res) => {
-    return res.status(404).send({
-        error: 'No domain specified'
+    return res.status(200).send({
+        error: 'DNS API is operational'
     });
 });
 

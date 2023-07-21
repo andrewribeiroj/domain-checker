@@ -10,9 +10,8 @@ router.get('/favicon.ico', (req, res) => res.status(204));
 
 // Read
 router.get('/', async (req, res) => {
-    return res.status(400).send({
-        error: '400',
-        message: 'Insufficient arguments'
+    return res.status(200).send({
+        message: 'HTTP API is operational'
     });
 })
 
