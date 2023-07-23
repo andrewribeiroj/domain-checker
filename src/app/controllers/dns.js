@@ -9,7 +9,8 @@ router.get('/favicon.ico', (req, res) => res.status(204));
 // Read
 router.get('/', async (req, res) => {
     return res.status(200).send({
-        error: 'DNS API is operational'
+        status: 200,
+        message: 'DNS API is operational'
     });
 });
 

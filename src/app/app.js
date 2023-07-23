@@ -16,7 +16,10 @@ app.use(
 app.use(express.json());
 
 app.get('/', (req,res) => {
-    return res.send({ message: '200' })
+    return res.send({
+        status: 200,
+        message: 'API is operational'
+    })
 })
 
 // Controllers
